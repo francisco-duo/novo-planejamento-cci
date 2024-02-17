@@ -1,0 +1,44 @@
+{% extends 'base_login.html' %}
+
+{% load static %}
+
+{% block title %}Cadastro{% endblock title %}
+
+{% block content %}
+<main class="d-flex justify-content-center align-items-center" style="height: 100vh !important;">
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div class="h-50 py-5 px-3 rounded shadow-lg border border-primary">
+            <div class="text-center mb-4">
+                <h5>CADASTRO</h5>
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Email institucional</label>
+                <input name="email" type="email" class="form-control" id="exampleFormControlInput1"
+                    placeholder="name@example.com">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Senha</label>
+                <input name="password" type="password" class="form-control" id="exampleFormControlInput1"
+                    placeholder="*******">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Confirmar senha</label>
+                <input name="confirmPassword" type="password" class="form-control" id="exampleFormControlInput1"
+                    placeholder="*******">
+            </div>
+            <span class="mb-3">Ainda não tem cadastro?</span>
+            <span><a href="{% url 'login' %}">clique aqui</a></span>
+            <button type="submit" class="w-100 btn btn-primary">Cadastrar</button>
+        </div>
+        {% if messages %}
+            <ul class="messages mt-5">
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </form>
+</main>
+{% endblock content %}

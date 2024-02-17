@@ -1,0 +1,37 @@
+{% extends 'base_login.html' %}
+
+{% block title %}Cadastro{% endblock title %}
+
+{% block content %}
+<main
+    class="d-flex justify-content-center align-items-center" 
+    style="height: 100vh !important;">
+
+    <form 
+        action="{% url 'login' %}"
+        method="POST">
+        {% csrf_token %}
+        <div class="h-50 py-5 px-3 rounded shadow-lg border border-primary">
+            <div class="text-center mb-4">
+                <h5>LOGIN</h5>
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Email institucional</label>
+                <input name="email" type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Senha</label>
+                <input
+                    name="password"
+                    type="password"
+                    class="form-control"
+                    id="exampleFormControlInput1"
+                    placeholder="*******">
+            </div>
+            <span class="mb-3">Ainda não tem cadastro?</span>
+            <span><a href="{% url 'register' %}">clique aqui</a></span>
+        <button type="submit" class="w-100 btn btn-primary mt-3">Acessar</button>
+        </div>
+    </form>
+</main>
+{% endblock content %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Planejar{% endblock title %}
+
+{% block content %}
+<section class="w-100 py-5 px-3">
+    <form action="{% url 'create_plan' %}" method="POST">
+        {{ form }}
+    
+        <div class="w-100 d-flex justify-content-center align-items-center">
+            <button class="btn btn-primary" type="submit">Enviar</button>
+        </div>
+    </form>
+</section>
+{% endblock content %}
