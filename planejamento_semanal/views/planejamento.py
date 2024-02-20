@@ -1,6 +1,15 @@
+import json
 from django.shortcuts import render, redirect
 
-from planejamento_semanal.forms.planejamento import PlanjemantoForm
+TAXONOMIAS = [
+    'Lembrar',
+    'Entender',
+    'Aplicar',
+    'Análisar',
+    'Avaliar',
+    'Elaborar',
+    'Interceder'
+]
 
 
 def index(request):
@@ -15,22 +24,40 @@ def index(request):
 
 def create_plan(request):
     if request.user.is_authenticated:
-        # POST
-        if request.method == 'POST':
-            form = PlanjemantoForm(request.POST)
+        codigo_usuario: str = ''
 
-            if form.is_valid():
-                form.instance.planejamento_semanal_criador = request.user.email
-                form.save()
+        turmas: list = []
+        disciplina: list = []
 
-                return redirect('index')
-        else:
-            form = PlanjemantoForm()
+        with open('users.json', 'r') as arqv_u:
+            arqv_usuarios = json.load(arqv_u)
+
+            for usuario in arqv_usuarios:
+                if usuario['email_colaborador'] == request.user.email:
+                    codigo_usuario = usuario['codigo_colaborador']
+                    break
+
+        with open('turmas.json', 'r') as arqv:
+            arqv_turmas = json.load(arqv)
+
+            for turma in arqv_turmas:
+                if codigo_usuario in turma['colaborador_codigo']:
+                    if turma['turma'] in turmas:
+                        pass
+                    else:
+                        turmas.append(turma['turma'])
+                    if turma['disciplinas'] in disciplina:
+                        pass
+                    else:
+                        disciplina.append(turma['disciplinas'])
 
         return render(
-            request,
-            'planejamento/create_planejamento.html',
-            {'form': form}
+            request, 'planejamento/planejamento.html',
+            {
+                'turmas': turmas,
+                'disciplinas': disciplina,
+                'taxonomias': TAXONOMIAS
+            }
         )
     else:
         return redirect('login')

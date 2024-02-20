@@ -28,7 +28,7 @@ def connect_sophia():
 def http_response_disciplinas(request, ):
     response = []
 
-    for disciplinas in requests.get(GET_DISCIPLINA, headers=connect_sophia()).json():
+    for disciplinas in requests.get(GET_DISCIPLINA, headers=connect_sophia()).json():  # noqa: E501
         response.append(disciplinas)
 
     return JsonResponse(response, safe=False)

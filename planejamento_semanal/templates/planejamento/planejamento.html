@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+
+{% block tittle %}Planejamento Semanal{% endblock tittle %}
+{% load static %}
+
+{% block content %}
+<style>
+    .badge {
+        display: inline-block;
+        padding: 0.25em 0.5em;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 0.25rem;
+        margin-right: 5px;
+    }
+
+    .badge-green {
+        background-color: #28a745;
+    }
+
+    .remove-badge {
+        cursor: pointer;
+        margin-left: 5px;
+    }
+</style>
+<section class="">
+
+    <!-- Formulário -->
+    <form id="teste" action="" method="POST" class="d-flex flex-column justify-content-center align-items-center">
+        <!-- Token de segurança do django -->
+        {% csrf_token %}
+
+
+        <!-- Campos -->
+        <div class="w-25 d-flex my-5 rounded-pill bg-success justify-content-center align-items-center border border-success"
+            onclick="addField()">
+            <i class="fa-solid fa-plus my-2" onclick="addField()" style="color: white;"></i>
+        </div>
+
+        <div id="input-test" class="d-flex flex-column justify-content-center align-items-center my-2">
+            <!--  campos -->
+
+        </div>
+
+        <!-- badges -->
+        <div class="d-flex my-1 px-3 justify-content-center align-items-center" id="badgeContainer"></div>
+
+        <!-- Input: hidden para receber os valores das badges -->
+        <input type="hidden" id="badgeValues1" name="badgeValues1">
+        <input type="hidden" id="badgeValues2" name="badgeValues2">
+
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+
+</section>
+
+<script>
+    let fieldCounter = 1;
+
+    function addField() {
+        // Campos a serem clonados
+        let newTurmas = document.createElement('select');
+        let newDisciplinas = document.createElement('select');
+        let newTaxonomias = document.createElement('select');
+        let horaAula = document.createElement('input')
+        let newDataInicial = document.createElement('input');
+        let newDataFinal = document.createElement('input');
+        let newTextArea = document.createElement('textarea');
+        let newBotaoOnclick = document.createElement('i');
+        let newDiv = document.createElement('div')
+        let contentBotaoOnClick = document.createElement('div');
+
+        let turma = {{turmas| safe}};
+        let disciplina = {{disciplinas| safe}};
+        let taxonomia = {{taxonomias|safe}};
+
+        // Textarea do planejamento
+        newTextArea.name = 'descricao' + fieldCounter;
+        newTextArea.classList.add('form-control');
+        newTextArea.classList.add('mb-3');
+        newTextArea.classList.add('border');
+        newTextArea.classList.add('border-primary');
+        newTextArea.id = 'exampleFormControlTextarea1';
+        newTextArea.style.height = '200px';
+
+        newDiv.id = 'fields_teste';
+        newDiv.classList.add('d-flex');
+        newDiv.classList.add('mb-3');
+
+        // Select das turmas
+        newTurmas.type = 'select';
+        newTurmas.name = 'turmas' + fieldCounter;
+        newTurmas.classList.add('form-select');
+        newTurmas.classList.add('mx-2');
+        newTurmas.classList.add('select-multiple');
+        newTurmas.id = 'selectOptions1';
+        newTurmas.style.maxHeight = '90px';
+
+        // Select das disciplinas
+        newDisciplinas.type = 'select';
+        newDisciplinas.name = 'disciplinas' + fieldCounter;
+        newDisciplinas.classList.add('form-select');
+        newDisciplinas.classList.add('mx-2');
+        newDisciplinas.classList.add('select-multiple');
+        newDisciplinas.style.maxHeight = '90px';
+
+        // Select das taxonomias
+        newTaxonomias.type = 'select';
+        newTaxonomias.name = 'taxonomias' + fieldCounter;
+        newTaxonomias.classList.add('form-select');
+        newTaxonomias.classList.add('mx-2');
+        newTaxonomias.id = 'selectOptions2';
+        newTaxonomias.style.maxHeight = '90px';
+
+        // Input da hora aula
+        horaAula.type = 'input';
+        horaAula.name = 'hora_aula' + fieldCounter;
+        horaAula.classList.add('form-control');
+        horaAula.classList.add('mx-2');
+        horaAula.placeholder = 'Hora aula';
+
+        // Datas de inicio e término do planejamento
+        newDataInicial.type = 'date';
+        newDataInicial.name = 'date_i' + fieldCounter;
+        newDataInicial.classList.add('form-control');
+        newDataInicial.classList.add('mx-2');
+
+        newDataFinal.type = 'date';
+        newDataFinal.name = 'date_f' + fieldCounter;
+        newDataFinal.classList.add('form-control');
+        newDataFinal.classList.add('mx-2');
+
+        //Botão para adicionar novos planejamentos
+        contentBotaoOnClick.classList.add('d-flex');
+        contentBotaoOnClick.classList.add('justify-content-center');
+        contentBotaoOnClick.classList.add('align-items-center');
+        contentBotaoOnClick.classList.add('border');
+        contentBotaoOnClick.classList.add('border-success');
+        contentBotaoOnClick.classList.add('rounded-circle');
+        contentBotaoOnClick.classList.add('px-2');
+
+        newBotaoOnclick.classList.add('fa-solid');
+        newBotaoOnclick.classList.add('fa-plus');
+
+        newBotaoOnclick.onclick = addField;
+
+        for (let optionText of turma) {
+            let option = document.createElement('option');
+            option.value = optionText;
+            option.text = optionText;
+            newTurmas.appendChild(option);
+        }
+
+        for (let optionText of disciplina) {
+            let option = document.createElement('option');
+            option.value = optionText;
+            option.text = optionText;
+            newDisciplinas.appendChild(option);
+        }
+
+        for (let optionText of taxonomia) {
+            let option = document.createElement('option');
+            option.value = optionText;
+            option.text = optionText;
+            newTaxonomias.appendChild(option);
+        }
+
+        if (fieldCounter <= 1) {
+            document.getElementById('input-test').appendChild(newDiv).appendChild(newTurmas);
+            document.getElementById('input-test').appendChild(newDiv).appendChild(newDisciplinas);
+            document.getElementById('input-test').appendChild(newDiv).appendChild(newTaxonomias);
+            document.getElementById('input-test').appendChild(newDiv).appendChild(horaAula);
+            document.getElementById('input-test').appendChild(newDiv).appendChild(newDataInicial);
+            document.getElementById('input-test').appendChild(newDiv).appendChild(newDataFinal);
+            document.getElementById('input-test').appendChild(newTextArea);
+        } else {
+            let newBotaoOnclick = document.createElement('span');
+            newBotaoOnclick.textContent = 'Limite de registros simultâneos atingido...';
+            newBotaoOnclick.style.color = 'red';
+            setTimeout(
+                function () {
+                    newBotaoOnclick.style.display = 'none';
+                }, 6000
+            )
+
+            document.getElementById('input-test').appendChild(newDiv).appendChild(newBotaoOnclick);
+        }
+
+        fieldCounter++;
+    }
+
+    function createBadge(text, colorClass) {
+        var badge = document.createElement('span');
+        badge.classList.add('badge');
+        badge.classList.add(colorClass);
+        badge.textContent = text;
+
+        var removeButton = document.createElement('span');
+        removeButton.classList.add('remove-badge');
+        removeButton.textContent = 'x';
+        removeButton.addEventListener('click', function () {
+            badge.parentNode.removeChild(badge);
+        });
+
+        badge.appendChild(removeButton);
+        return badge;
+    }
+
+    function addBadge(container, text, colorClass) {
+        var badgeContainer = document.getElementById(container);
+        var badge = createBadge(text, colorClass);
+        badgeContainer.appendChild(badge);
+    }
+
+    document.getElementById('selectOptions1').addEventListener('change', function () {
+        var selectedOption = this.options[this.selectedIndex];
+        if (selectedOption.value) {
+            addBadge('badgeContainer', selectedOption.textContent, 'badge');
+        }
+    });
+
+    document.getElementById('selectOptions2').addEventListener('change', function () {
+        var selectedOption = this.options[this.selectedIndex];
+        if (selectedOption.value) {
+            addBadge('badgeContainer', selectedOption.textContent, 'badge-green');
+        }
+    });
+
+    // Enviar
+    document.getElementById('enviar').addEventListener('click', function () {
+        var badges1 = document.querySelectorAll('.badge[data-type="1"]');
+        var values1 = [];
+        badges1.forEach(function (badge) {
+            values1.push(badge.textContent);
+        });
+        var concatenatedValues1 = values1.join(',');
+        document.getElementById('badgeValues1').value = concatenatedValues1;
+
+        var badges2 = document.querySelectorAll('.badge[data-type="2"]');
+        var values2 = [];
+        badges2.forEach(function (badge) {
+            values2.push(badge.textContent);
+        });
+        var concatenatedValues2 = values2.join(',');
+        document.getElementById('badgeValues2').value = concatenatedValues2;
+
+        // Agora o formulário será enviado com os valores das badges separados
+    });
+
+</script>
+{% endblock content %}
