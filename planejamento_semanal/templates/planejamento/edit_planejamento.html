@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block title %}Planejamento Semanal{% endblock title %}
+{% load static %}
+
+{% block content %}
+<style>
+    .badge {
+        display: inline-block;
+        padding: 0.25em 0.5em;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 0.25rem;
+        margin-right: 5px;
+    }
+
+    .badge-green {
+        background-color: #28a745;
+    }
+
+    .remove-badge {
+        cursor: pointer;
+        margin-left: 5px;
+    }
+</style>
+<section class="">
+
+    <!-- Formulário -->
+    <form id="teste" action="" method="POST" class="d-flex flex-column justify-content-center align-items-center">
+        <!-- Token de segurança do django -->
+        {% csrf_token %}
+
+
+        <!-- Campos -->
+        <div class="w-25 d-flex my-5 rounded-pill bg-success justify-content-center align-items-center border border-success"
+            onclick="addField()">
+            <i class="fa-solid fa-plus my-2" onclick="addField()" style="color: white;"></i>
+        </div>
+
+        <div id="input-test" class="d-flex flex-column justify-content-center align-items-center my-2">
+            <!--  campos -->
+            <div class="d-flex mb-3" id="fields_teste">
+                <select name="turmas1" id="selectOptions1" class="form-select mx-2 select-multiple"
+                    style="max-height: 90px;">
+                    {% for turma in turmas %}
+                        <option value="{{turma}}">{{turma}}</option>
+                    {% endfor %}
+                </select>
+                <select name="disciplinas1" class="form-select mx-2 select-multiple"
+                    style="max-height: 90px;">
+                    {% for disciplina in disciplinas %}
+                        <option value="{{disciplina}}">{{disciplina}}</option>
+                    {% endfor %}
+                </select>
+                <select name="taxonomias1" id="selectOptions2" class="form-select mx-2 select-multiple"
+                    style="max-height: 90px;">
+                    {% for taxonomia in taxonomias %}
+                        <option value="{{taxonomia}}">{{taxonomia}}</option>
+                    {% endfor %}
+                </select>
+                <input value="{{ hora_aula }}" type="text" name="hora_aula1" class="form-control mx-2">
+                <input value="{{ data_inicial|date:'Y-m-d' }}" type="date" name="date_i1" class="form-control mx-2">
+                <input value="{{ data_final|date:'Y-m-d' }}" type="date" name="date_f1" class="form-control mx-2">
+
+            </div>
+            <textarea name="descricao1" id="exampleFormControlTextarea1"
+                class="form-control mb-3 border border-primary">{{ descricao }}</textarea>
+        </div>
+
+        <!-- badges -->
+        <div class="d-flex my-1 px-3 justify-content-center align-items-center" id="badgeContainer">
+
+        </div>
+
+        <!-- Input: hidden para receber os valores das badges -->
+        <input type="hidden" id="badgeValues1" name="badgeValues1" data-type="1">
+        <input type="hidden" id="badgeValues2" name="badgeValues2" data-type="2">
+
+        <button type="submit" class="btn btn-primary" id="enviar">Enviar</button>
+    </form>
+
+</section>
+
+<script>
+    let taxo_badges = {{taxonomia_badges| safe}};
+    let turmas_badges = {{turma_badges| safe}}
+
+    function createBadge(text, colorClass) {
+        var badge = document.createElement('span');
+        badge.classList.add('badge');
+        badge.classList.add(colorClass);
+        badge.textContent = text;
+
+        var removeButton = document.createElement('span');
+        removeButton.classList.add('remove-badge');
+        removeButton.textContent = 'x';
+        removeButton.addEventListener('click', function () {
+                badge.parentNode.removeChild(badge);
+        });
+
+        badge.appendChild(removeButton);
+        return badge;
+    }
+
+    function addBadge(container, text, colorClass) {
+        var badgeContainer = document.getElementById(container);
+        var badge = createBadge(text, colorClass);
+        badgeContainer.appendChild(badge);
+    }
+
+    document.getElementById('selectOptions1').addEventListener('change', function () {
+        var selectedOption = this.options[this.selectedIndex];
+        if (selectedOption.value) {
+            addBadge('badgeContainer', selectedOption.textContent, 'badge-blue');
+        }
+    });
+
+    document.getElementById('selectOptions2').addEventListener('change', function () {
+        var selectedOption = this.options[this.selectedIndex];
+        if (selectedOption.value) {
+            addBadge('badgeContainer', selectedOption.textContent, 'badge-green');
+        }
+    });
+
+    // Enviar
+    document.getElementById('enviar').addEventListener('click', function () {
+        var badges1 = document.querySelectorAll('.badge-blue');
+        var values1 = [];
+        badges1.forEach(function (badge) {
+            values1.push(badge.textContent);
+        });
+        var concatenatedValues1 = values1.join(',');
+        document.getElementById('badgeValues1').value = concatenatedValues1;
+
+        var badges2 = document.querySelectorAll('.badge-green');
+        var values2 = [];
+        badges2.forEach(function (badge) {
+            values2.push(badge.textContent);
+        });
+        var concatenatedValues2 = values2.join(',');
+        document.getElementById('badgeValues2').value = concatenatedValues2;
+
+        // Agora o formulário será enviado com os valores das badges separados
+    });
+
+    for (let turma_bg of turmas_badges) {
+        addBadge('badgeContainer', turma_bg, 'badge-blue');
+    }
+    for (let t_badges of taxo_badges) {
+        addBadge('badgeContainer', t_badges, 'badge-green');
+    }
+
+</script>
+{% endblock content %}
