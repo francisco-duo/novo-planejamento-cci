@@ -121,8 +121,8 @@ class PlanejamentoSemanal(models.Model):
     planejamento_semanal_dt_final = models.DateTimeField(blank=True, verbose_name='Data', null=True)  # noqa:E501
     planejamento_semanal_descricao = models.TextField(blank=True, verbose_name='Descrição')  # noqa:E501
     registro_planejamento_semanal_dt = models.DateField(default=timezone.now, blank=True, verbose_name='Data de Registro')  # noqa:E501
-    planejamento_semanal_enviado = models.BooleanField(blank=True, null=True)
-    planejamento_semanal_cod_classroom = models.TextField(blank=True, null=True)
+    planejamento_semanal_enviado = models.BooleanField(blank=True, null=True, default=False)  # noqa: E501
+    planejamento_semanal_cod_classroom = models.TextField(blank=True, null=True)  # noqa: E501
 
 
 class RegistroPlanejamentoSemanal(models.Model):

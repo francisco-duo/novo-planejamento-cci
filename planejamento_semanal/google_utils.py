@@ -16,10 +16,11 @@ from googleapiclient.http import HttpError
 
 FILE_NAME: str = 'credentials.json'
 SCOPES: list = [
-    'https://www.googleapis.com/auth/classroom.courses.readonly',
-    'https://www.googleapis.com/auth/classroom.courseworkmaterials'
+    'https://www.googleapis.com/auth/classroom.courses',
+    'https://www.googleapis.com/auth/classroom.courseworkmaterials',
+    'https://www.googleapis.com/auth/classroom.topics'
 ]
-SUBJECT: str = 'francisco.duo@portalcci.com.br'
+SUBJECT: str = 'dev@portalcci.com.br'
 
 
 class ConectarGoogle():
@@ -100,30 +101,54 @@ class Classroom():
 
     def criar_corpo_da_solicitacao(self):
         """"""
-        return {'title': self.titulo, 'description': self.descricao, 'state': 'PUBLISHED'}  # noqa: E501
+        return {
+            'title': self.titulo,
+            'description': self.descricao,
+            'state': 'PUBLISHED',
+            'topicId': self.listar_id_topico_classroom()
+        }
+
+    def criar_corpo_da_solicitacao_para_edicao(self):
+        """"""
+        return {
+            'title': self.titulo,
+            'description': self.descricao,
+        }
 
     def adicionar_material_classroom(self):
         """"""
         return self.service.courses().courseWorkMaterials().create(
             courseId=self.pegar_id_da_turma(),
-            body=self.criar_corpo_da_solicitacao()
+            body=self.criar_corpo_da_solicitacao(),
         ).execute()
 
-    def editar_material_classroom(self, material_id):
+    def editar_material_classroom(self, material_id: str):
         """"""
+        update_mask: str = 'title, description'
+
         return self.service.courses().courseWorkMaterials.patch(
             id=material_id,
             courseId=self.course_id,
-            body=self.criar_corpo_da_solicitacao()
+            body=self.criar_corpo_da_solicitacao(),
+            updateMask=update_mask
         ).execute()
+
+    def listar_id_topico_classroom(self):
+        response = self.service.courses().topics().list(
+            courseId=self.pegar_id_da_turma()
+        ).execute()
+
+        for topic in response['topic']:
+            if topic['name'] == 'Plano Semanal':
+                return topic['topicId']
 
 
 if __name__ == '__main__':
     classroom = Classroom(
         titulo='Teste',
         descricao='Descricao',
-        curso_nome='teste_portal_professor',
-        professor_email='francisco.duo@portalcci.com.br'
+        curso_nome='4ºBm - profª Silvânia Lima',
+        professor_email='flavia.arara@portalcci.com.br',
     )
 
     response = classroom.adicionar_material_classroom()

@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from planejamento_semanal.models import PlanejamentoSemanal
+from planejamento_semanal.google_utils import Classroom
 
 TAXONOMIAS = [
     'Lembrar',
@@ -183,28 +184,41 @@ def edit_plan(request, pk):
                     else:
                         disciplina.append(turma['disciplinas'])
 
-        try:
-            planejamento.planejamento_semanal_criador = request.user.email
-            planejamento.planejamento_semanal_turma = request.POST.get(
-                'badgeValues1').replace('x', '')
-            planejamento.planejamento_semanal_disciplina = request.POST.get(
-                'disciplinas1', '')
-            planejamento.planejamento_semanal_taxonomia = request.POST.get(
-                'badgeValues2').replace('x', '')
-            planejamento.planejamento_semanal_hora_aula = request.POST.get(
-                'hora_aula1', '')
-            planejamento.planejamento_semanal_dt_inicio = data_inicial
-            planejamento.planejamento_semanal_dt_final = data_final
-            planejamento.planejamento_semanal_descricao = request.POST.get(
-                'descricao1')
+        if request.method == 'POST':
+            try:
+                planejamento.planejamento_semanal_criador = request.user.email
+                planejamento.planejamento_semanal_turma = request.POST.get(
+                    'badgeValues1').replace('x', '')
+                planejamento.planejamento_semanal_disciplina = request.POST.get(
+                    'disciplinas1', '')
+                planejamento.planejamento_semanal_taxonomia = request.POST.get(
+                    'badgeValues2').replace('x', '')
+                planejamento.planejamento_semanal_hora_aula = request.POST.get(
+                    'hora_aula1', '')
+                planejamento.planejamento_semanal_dt_inicio = data_inicial
+                planejamento.planejamento_semanal_dt_final = data_final
+                planejamento.planejamento_semanal_descricao = request.POST.get(
+                    'descricao1')
+                planejamento.save()
 
-            planejamento.save()
+                if planejamento.planejamento_semanal_enviado:
+                    classroom = Classroom(
+                        titulo=f'Planejamento {planejamento.planejamento_semanal_dt_inicio} - {planejamento.planejamento_semanal_dt_final}',
+                        descricao=f'{planejamento.planejamento_semanal_taxonomia}\n{planejamento.planejamento.planejamento_semanal_descricao}',
+                        curso_nome=turma,
+                        professor_email=request.user.email
+                    )
 
+                    classroom.editar_material_classroom(
+                        material_id=planejamento.planejamento_semanal_cod_classroom
+                    )
+
+                return redirect('list_plan')
+
+            except Exception:
+                # Messages
+                ...
             return redirect('list_plan')
-
-        except Exception:
-            # Messages
-            ...
 
         return render(
             request,
@@ -228,12 +242,11 @@ def edit_plan(request, pk):
 def publication_plan_classroom(request, pk):
     """"""
     if request.user.is_authenticated:
-        from planejamento_semanal.google_utils import Classroom
-
         planejamento = PlanejamentoSemanal.objects.get(id=pk)
-        
-        planejamento_turmas = planejamento.planejamento_semanal_turma.split(',')
-        
+
+        planejamento_turmas = planejamento.planejamento_semanal_turma.split(
+            ',')
+
         for turma in planejamento_turmas:
             classroom = Classroom(
                 titulo=f'Planejamento {planejamento.planejamento_semanal_dt_inicio} - {planejamento.planejamento_semanal_dt_final}',
@@ -241,6 +254,13 @@ def publication_plan_classroom(request, pk):
                 curso_nome=turma,
                 professor_email=request.user.email
             )
-        
+
+            response = classroom.adicionar_material_classroom()
+
+            planejamento.planejamento_semanal_cod_classroom = response.get('id')  # noqa: E501
+            planejamento.planejamento_semanal_enviado = True
+            planejamento.save()
+
+        return redirect('list_plan')
     else:
         return redirect('login')
