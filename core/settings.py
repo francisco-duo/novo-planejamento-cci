@@ -26,11 +26,7 @@ SECRET_KEY = 'django-insecure-f1b!2%!*ym7dlefa%_-oyonlkx)%v(t2_tz(r_j-y2-8p^h(o6
 DEBUG = True
 
 if DEBUG is True:
-    ALLOWED_HOSTS = []
-
-    # Database
-    # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
+    ALLOWED_HOSTS = ['*', ]
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -38,18 +34,26 @@ if DEBUG is True:
         }
     }
 else:
-    ALLOWED_HOSTS = []
-
+    ALLOWED_HOSTS = [
+        '18.229.127.255',
+        'http://18.229.127.255',
+        'http://www.cciweb.com.br',
+        'https://www.cciweb.com.br',
+        'www.cciweb.com.br',
+        'cciweb.com.br',
+    ]
     # Database
-    # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
+    # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": 'postgres',
+            "USER": 'postgres',
+            "PASSWORD": 'admins3t4p3',
+            "HOST": 'portal-professor.cejb4rn9axzb.us-east-1.rds.amazonaws.com',
+            "PORT": '5432',
         }
     }
-
 
 # Application definition
 
