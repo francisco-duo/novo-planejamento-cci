@@ -31,6 +31,13 @@
             <span class="mb-3">Ainda não tem cadastro?</span>
             <span><a href="{% url 'register' %}">clique aqui</a></span>
         <button type="submit" class="w-100 btn btn-primary mt-3">Acessar</button>
+        {% if messages %}
+            <ul class="messages mt-5">
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
         </div>
     </form>
 </main>

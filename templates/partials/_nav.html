@@ -3,7 +3,7 @@
 <nav class="navbar bg-primary my-3 mx-3 rounded-pill shadow-lg">
     <div class="container-fluid">
         <a class="navbar-brand" href="">
-            <img src="{% static 'img/logo_cci.png' %}" alt="logo cci" class="mx-5" style="width: 50px !important;">
+            <img src="{% static 'images/logo_cci.png' %}" alt="logo cci" class="mx-5" style="width: 50px !important;">
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
@@ -30,15 +30,11 @@
                             class="nav-link active"
                             href="{% url 'list_plan' %}">Meus Planejamentos</a>
                     </li>
-                    <li class="nav-item">
-                        <a 
-                            class="nav-link active"
-                            href="">Dashboard</a>
-                    </li><br>
+                    
                     <li class="nav-item">
                         <a 
                             class="nav-link active" 
-                            href="">Sair</a>
+                            href="{% url 'logout' %}">Sair</a>
                     </li>
 
                 </ul>
