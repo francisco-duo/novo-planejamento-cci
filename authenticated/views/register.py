@@ -15,6 +15,11 @@ def register(request):
             password: str = request.POST.get('password')
             confirm_password: str = request.POST.get('confirmPassword')
 
+            messages.warning(
+                request,
+                'Acesso autorizado somente para o domínio @portalcci.com.br'
+            )
+
             if password == confirm_password:
                 register_user = User.objects.create_user(
                     username, email, confirm_password

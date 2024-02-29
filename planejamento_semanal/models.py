@@ -123,6 +123,7 @@ class PlanejamentoSemanal(models.Model):
     registro_planejamento_semanal_dt = models.DateField(default=timezone.now, blank=True, verbose_name='Data de Registro')  # noqa:E501
     planejamento_semanal_enviado = models.BooleanField(blank=True, null=True, default=False)  # noqa: E501
     planejamento_semanal_cod_classroom = models.TextField(blank=True, null=True)  # noqa: E501
+    planejamento_semanal_cod_classroom_course = models.TextField(blank=True, null=True)  # noqa: E501
 
 
 class RegistroPlanejamentoSemanal(models.Model):

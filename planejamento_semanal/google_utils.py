@@ -122,15 +122,15 @@ class Classroom():
             body=self.criar_corpo_da_solicitacao(),
         ).execute()
 
-    def editar_material_classroom(self, material_id: str):
+    def editar_material_classroom(self, material_id: str, course_id: str):
         """"""
-        update_mask: str = 'title, description'
+        # update_mask: str = 'title, description'
 
-        return self.service.courses().courseWorkMaterials.patch(
+        return self.service.courses().courseWorkMaterials().patch(
             id=material_id,
-            courseId=self.course_id,
-            body=self.criar_corpo_da_solicitacao(),
-            updateMask=update_mask
+            courseId=course_id,
+            updateMask=','.join(self.criar_corpo_da_solicitacao_para_edicao().keys()),
+            body=self.criar_corpo_da_solicitacao_para_edicao(),
         ).execute()
 
     def listar_id_topico_classroom(self):
@@ -151,5 +151,5 @@ if __name__ == '__main__':
         professor_email='flavia.arara@portalcci.com.br',
     )
 
-    response = classroom.adicionar_material_classroom()
+    response = classroom.editar_material_classroom(material_id='666234530622', course_id='656922661070')
     print(response)

@@ -210,7 +210,8 @@ def edit_plan(request, pk):
                     )
 
                     classroom.editar_material_classroom(
-                        material_id=planejamento.planejamento_semanal_cod_classroom
+                        material_id=planejamento.planejamento_semanal_cod_classroom,
+                        course_id=planejamento.planejamento_semanal_cod_classroom_course
                     )
 
                 return redirect('list_plan')
@@ -258,6 +259,7 @@ def publication_plan_classroom(request, pk):
             response = classroom.adicionar_material_classroom()
 
             planejamento.planejamento_semanal_cod_classroom = response.get('id')  # noqa: E501
+            planejamento.planejamento_semanal_cod_classroom_course = response.get('courseId')  # noqa: E501
             planejamento.planejamento_semanal_enviado = True
             planejamento.save()
 
