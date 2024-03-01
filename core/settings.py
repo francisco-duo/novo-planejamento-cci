@@ -35,8 +35,8 @@ if DEBUG is True:
     }
 else:
     ALLOWED_HOSTS = [
-        '18.229.127.255',
-        'http://18.229.127.255',
+        '15.229.1.19',
+        'http://15.229.1.19',
         'http://www.cciweb.com.br',
         'https://www.cciweb.com.br',
         'www.cciweb.com.br',

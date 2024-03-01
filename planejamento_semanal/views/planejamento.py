@@ -203,8 +203,8 @@ def edit_plan(request, pk):
 
                 if planejamento.planejamento_semanal_enviado:
                     classroom = Classroom(
-                        titulo=f'Planejamento {planejamento.planejamento_semanal_dt_inicio} - {planejamento.planejamento_semanal_dt_final}',
-                        descricao=f'{planejamento.planejamento_semanal_taxonomia}\n{planejamento.planejamento.planejamento_semanal_descricao}',
+                        titulo=f'{planejamento.planejamento_semanal_turma} {planejamento.planejamento_semanal_dt_inicio} - {planejamento.planejamento_semanal_dt_final}',
+                        descricao=f'{planejamento.planejamento_semanal_criador}\n\n{planejamento.planejamento_semanal_taxonomia}\n\n{planejamento.planejamento.planejamento_semanal_descricao}',
                         curso_nome=turma,
                         professor_email=request.user.email
                     )
