@@ -251,7 +251,7 @@ def publication_plan_classroom(request, pk):
         for turma in planejamento_turmas:
             classroom = Classroom(
                 titulo=f'Planejamento {planejamento.planejamento_semanal_dt_inicio} - {planejamento.planejamento_semanal_dt_final}',
-                descricao=planejamento.planejamento_semanal_descricao,
+                descricao=f'{planejamento.planejamento_semanal_taxonomia}\n{planejamento.planejamento_semanal_descricao}',
                 curso_nome=turma,
                 professor_email=request.user.email
             )
